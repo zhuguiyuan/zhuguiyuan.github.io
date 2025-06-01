@@ -30,6 +30,9 @@ plugins:
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
 
 extra_javascript:
   - javascripts/mathjax.js
