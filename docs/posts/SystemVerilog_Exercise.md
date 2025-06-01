@@ -1,16 +1,16 @@
 ---
 date: 2025-06-01
 categories:
-  - template
+  - hardware
 ---
 
 # SystemVerilog 练习
 
-前两天看完了《使用 SystemVerilog 进行 RTL 建模》这本书，算是第一次系统地学了一遍。最近也回顾了刚上研究生时候写的 EE218-VLSI 课程项目，觉得可以用 SystemVerilog 重写一遍作为练习。于是在这里记录下项目要求和实现过程。
+前两天看完了《使用 SystemVerilog 进行 RTL 建模》这本书，算是第一次系统地学了一遍。最近也回顾了刚上研究生时候写的 EE218-VLSI 课程项目，觉得可以用 SystemVerilog 重写一遍作为练习。于是在这里记录下项目规约和实现。
 
 <!-- more -->
 
-## 项目 Specification
+## 项目规约
 
 实现一个 MLP 单元，这个单元有 8 层，每层 16 * 16 的权重（$W_0 ... W_7$），接收一个 16 * 16 的输入 $I$，计算 $W_7 \times ... \times W_0 \times I$。
 
@@ -88,3 +88,5 @@ endmodule
 项目提供了一些测试数据，由于以练习 SystemVerilog 为目的，只实现 RTL 模型即可，不用做后端。使用 Icarus Verilog 和 ADM/Xilinx Vivado 分别作为开源和闭源的仿真工具。使用 [Yosys-STA](https://github.com/zhuguiyuan/Yosys-STA) 项目评估时序。
 
 ## 项目实现
+
+代码见仓库 [SystemVerilog-Exercise](https://github.com/zhuguiyuan/SystemVerilog-Exercise)。
