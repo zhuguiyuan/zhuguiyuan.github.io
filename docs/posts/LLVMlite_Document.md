@@ -90,7 +90,7 @@ type ty =
 
 ## 程序结构
 
-LLVMlite 程序由（1）函数定义；（2）全局数据定义；（3）类型别名定义；（4）外部声明四部分构成。所有顶层定义都是互递归的。下面是这四个部分的 OCaml 数据结构。这里我们关注 `prog` 这个类型，是把顶层声明的绑定到名字上，有点像是可以创造出一个 ctxt 之类的东西用来做查询（实际上 LLVMlite 编译到 ISA 的时候也的确会用到）。
+LLVMlite 程序由（1）全局函数声明；（2）全局数据声明；（3）类型别名声明；（4）外部符号声明四部分构成。所有顶层定义都是互递归的。下面是这四个部分的 OCaml 数据结构。这里我们关注 `prog` 这个类型，是把顶层声明的绑定到名字上，有点像是可以创造出一个 ctxt 之类的东西用来做查询（实际上 LLVMlite 编译到 ISA 的时候也的确会用到）。
 
 ```ocaml
 (* Function type: argument types and return type *)
@@ -124,7 +124,7 @@ type prog = { tdecls : (tid * ty) list;
 
 下面我们依次关注 `prog` 的各个字段。
 
-## 类型声明
+## 类型别名声明
 
 `{ tdelcs : (tid * ty) list; ... }` 是把类型绑定到一个 tid 上。具体语法如下所示：
 
@@ -135,7 +135,7 @@ type prog = { tdecls : (tid * ty) list;
 
 假设上层语言有一个 `typealis Foo = Bar` 之类的代码，我们可以编译成一个 `[ "Foo", cmp_ty (Namedt "Bar") ]` 把右边编译好的类型绑定到 `"Foo"` 这个名字上。
 
-## 外部声明
+## 外部符号声明
 
 `{ edecls: (gid * ty) list; ... }` 在 LLVMlite 中的具体语法有下面的例子：
 
@@ -146,7 +146,7 @@ declare i32 @some_extern_func(i32, [5 x i64], i8*)
 
 可以用来编译上层语言的外部声明之类。也可以用来声明上层语言的内建函数，实现可以放到运行时里面用其他语言来生成，只要链接时对上签名 ABI 就行。
 
-## 全局声明
+## 全局数据声明
 
 `{ gdecls: (gid * gdecl) list; ... }`，然后回顾一下 `gdecl` 的类型是 `type gdecl = ty * ginit`，也就是类型及其初始值。`ty` 和 `ginit` 需要手动对上，后者有下面的几种可能：
 
@@ -182,7 +182,7 @@ type ginit =
 | `{ T1 G1, ..., TN GN }` | `{ T1,...,TN }` | 结构体字面量 |
 | `bitcast (T1* G1 to T2*)` | `T2*` | 重新解释比特的类型
 
-## 函数声明
+## 全局函数声明
 
 `{ fdecls: (gid * fdecl) list; ... }`，其中 `type fdecl = { f_ty : fty; f_param : uid list; f_cfg : cfg }`。函数声明的具体语法如下所示：
 
