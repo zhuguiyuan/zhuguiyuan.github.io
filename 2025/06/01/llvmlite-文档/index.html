@@ -608,7 +608,7 @@
         <li class="md-nav__item">
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
-      类型声明
+      类型别名声明
     </span>
   </a>
   
@@ -617,7 +617,7 @@
         <li class="md-nav__item">
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
-      外部声明
+      外部符号声明
     </span>
   </a>
   
@@ -626,7 +626,7 @@
         <li class="md-nav__item">
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
-      全局声明
+      全局数据声明
     </span>
   </a>
   
@@ -635,7 +635,7 @@
         <li class="md-nav__item">
   <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
-      函数声明
+      全局函数声明
     </span>
   </a>
   
@@ -834,7 +834,7 @@
 </code></pre></div>
 <p>有一个需要注意的点：LLVMlite 规定只有简单类型才可以出现在栈中或者是作为函数的参数，而聚合类型只能出现在全局和（运行时分配的）堆内存中，在栈上只能存一个指针。也就是说，简单类型可以 <code>alloca</code> 但是聚合类型不能 <code>alloca</code>（这一点和完整的 LLVM 不一样，完整的 LLVM 是可以 <code>alloca</code> 一个聚合类型的）。这个限制是简化目的，对于所有的聚合类型就要在运行时实现一个 <code>malloc</code> 之类的函数来处理分配了；结构体也不能像 C 语言那样整个拷贝传值调用，而是只能传一个指针。</p>
 <h2 id="_3">程序结构</h2>
-<p>LLVMlite 程序由（1）函数定义；（2）全局数据定义；（3）类型别名定义；（4）外部声明四部分构成。所有顶层定义都是互递归的。下面是这四个部分的 OCaml 数据结构。这里我们关注 <code>prog</code> 这个类型，是把顶层声明的绑定到名字上，有点像是可以创造出一个 ctxt 之类的东西用来做查询（实际上 LLVMlite 编译到 ISA 的时候也的确会用到）。</p>
+<p>LLVMlite 程序由（1）全局函数声明；（2）全局数据声明；（3）类型别名声明；（4）外部符号声明四部分构成。所有顶层定义都是互递归的。下面是这四个部分的 OCaml 数据结构。这里我们关注 <code>prog</code> 这个类型，是把顶层声明的绑定到名字上，有点像是可以创造出一个 ctxt 之类的东西用来做查询（实际上 LLVMlite 编译到 ISA 的时候也的确会用到）。</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c">(* Function type: argument types and return type *)</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">type</span> <span class="n">fty</span> <span class="o">=</span> <span class="n">ty</span> <span class="kt">list</span> <span class="o">*</span> <span class="n">ty</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
@@ -864,19 +864,19 @@
 <a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>              <span class="n">edecls</span> <span class="o">:</span> <span class="o">(</span><span class="n">gid</span> <span class="o">*</span> <span class="n">ty</span><span class="o">)</span> <span class="kt">list</span> <span class="o">}</span>
 </code></pre></div>
 <p>下面我们依次关注 <code>prog</code> 的各个字段。</p>
-<h2 id="_4">类型声明</h2>
+<h2 id="_4">类型别名声明</h2>
 <p><code>{ tdelcs : (tid * ty) list; ... }</code> 是把类型绑定到一个 tid 上。具体语法如下所示：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">%foo</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="kt">i64</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">%bar</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="k">x</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="p">]</span>
 </code></pre></div>
 <p>假设上层语言有一个 <code>typealis Foo = Bar</code> 之类的代码，我们可以编译成一个 <code>[ "Foo", cmp_ty (Namedt "Bar") ]</code> 把右边编译好的类型绑定到 <code>"Foo"</code> 这个名字上。</p>
-<h2 id="_5">外部声明</h2>
+<h2 id="_5">外部符号声明</h2>
 <p><code>{ edecls: (gid * ty) list; ... }</code> 在 LLVMlite 中的具体语法有下面的例子：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">declare</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="vg">@puts</span><span class="p">(</span><span class="kt">i8</span><span class="p">*)</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">declare</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="vg">@some_extern_func</span><span class="p">(</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="m">5</span><span class="w"> </span><span class="k">x</span><span class="w"> </span><span class="kt">i64</span><span class="p">],</span><span class="w"> </span><span class="kt">i8</span><span class="p">*)</span>
 </code></pre></div>
 <p>可以用来编译上层语言的外部声明之类。也可以用来声明上层语言的内建函数，实现可以放到运行时里面用其他语言来生成，只要链接时对上签名 ABI 就行。</p>
-<h2 id="_6">全局声明</h2>
+<h2 id="_6">全局数据声明</h2>
 <p><code>{ gdecls: (gid * gdecl) list; ... }</code>，然后回顾一下 <code>gdecl</code> 的类型是 <code>type gdecl = ty * ginit</code>，也就是类型及其初始值。<code>ty</code> 和 <code>ginit</code> 需要手动对上，后者有下面的几种可能：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c">(* Global Data Initializers *)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">type</span> <span class="n">ginit</span> <span class="o">=</span>
@@ -940,7 +940,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="_7">函数声明</h2>
+<h2 id="_7">全局函数声明</h2>
 <p><code>{ fdecls: (gid * fdecl) list; ... }</code>，其中 <code>type fdecl = { f_ty : fty; f_param : uid list; f_cfg : cfg }</code>。函数声明的具体语法如下所示：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">define</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="vg">@fac</span><span class="p">(</span><span class="kt">i64</span><span class="w"> </span><span class="nv">%n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nv nv-Anonymous">%1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">icmp</span><span class="w"> </span><span class="k">sle</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="nv">%n</span><span class="p">,</span><span class="w"> </span><span class="m">0</span>
