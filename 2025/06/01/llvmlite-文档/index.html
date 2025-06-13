@@ -1,0 +1,1160 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://zhuguiyuan.github.io/2025/06/01/llvmlite-%E6%96%87%E6%A1%A3/">
+      
+      
+        <link rel="prev" href="../systemverilog-%E7%BB%83%E4%B9%A0/">
+      
+      
+      
+      <link rel="icon" href="../../../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>LLVMlite 文档 - 桂圆的笔记</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#llvmlite" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../../.." title="桂圆的笔记" class="md-header__button md-logo" aria-label="桂圆的笔记" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            桂圆的笔记
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              LLVMlite 文档
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/zhuguiyuan/zhuguiyuan.github.io" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    zhuguiyuan.github.io
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../.." class="md-tabs__link">
+          
+  
+  
+    
+  
+  说说
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  关于
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="桂圆的笔记" class="md-nav__button md-logo" aria-label="桂圆的笔记" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    桂圆的笔记
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/zhuguiyuan/zhuguiyuan.github.io" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    zhuguiyuan.github.io
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    说说
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            说说
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_2" id="__nav_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    归档
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            归档
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_3" id="__nav_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    分类
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            分类
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/hw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HW
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/pl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    关于
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      第一感觉
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      数据类型
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      程序结构
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      类型声明
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      外部声明
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      全局声明
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      函数声明
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    回到主页
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    元数据
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2025-06-01 00:00:00+00:00" class="md-ellipsis">2025年6月1日</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            分类于
+                            
+                              <a href="../../../../category/pl/">PL</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              需要 4 分钟阅读时间
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+
+  
+  
+
+
+<h1 id="llvmlite">LLVMlite 文档</h1>
+<p>LLVMlite 是 Upenn CIS314（也是上科大 CS131）Compiler 课程中定义的 LLVM IR 的简化子集。它保留了 LLVM 的核心要素，挺适合用作初学者写编译器的目标语言。这篇文章是 LLVMlite 规范的简要记录。</p>
+<!-- more -->
+
+<h2 id="_1">第一感觉</h2>
+<p>下面是 LLVMlite 的一个例子，可以看到一些基本元素和 LLVM 是一致的。</p>
+<p>这个例子也能通过 <code>llc</code> 编译为 ISA 对应的汇编或 <code>clang</code> 直接编译为可以运行的 ELF。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>clang<span class="w"> </span>demo.ll<span class="w"> </span>-o<span class="w"> </span>demo<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./demo<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$?</span>
+</code></pre></div>
+<p>可以得到结果是 208（在 Bash 中返回值是 uint8_t，fac(6) = 720 截断之后就是 208）。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c">; demo.ll</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">define</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="vg">@fac</span><span class="p">(</span><span class="kt">i64</span><span class="w"> </span><span class="nv">%n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">              </span><span class="c">; (1)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nv nv-Anonymous">%1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">icmp</span><span class="w"> </span><span class="k">sle</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="nv">%n</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="w">              </span><span class="c">; (2)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="k">br</span><span class="w"> </span><span class="kt">i1</span><span class="w"> </span><span class="nv nv-Anonymous">%1</span><span class="p">,</span><span class="w"> </span><span class="kt">label</span><span class="w"> </span><span class="nv">%ret</span><span class="p">,</span><span class="w"> </span><span class="kt">label</span><span class="w"> </span><span class="nv">%rec</span><span class="w">     </span><span class="c">; (3)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nl">ret:</span><span class="w">                                   </span><span class="c">; (4)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="k">ret</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nl">rec:</span><span class="w">                                   </span><span class="c">; (5)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nv nv-Anonymous">%2</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">sub</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="nv">%n</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="w">                   </span><span class="c">; (6)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nv nv-Anonymous">%3</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">call</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="vg">@fac</span><span class="p">(</span><span class="kt">i64</span><span class="w"> </span><span class="nv nv-Anonymous">%2</span><span class="p">)</span><span class="w">           </span><span class="c">; (7)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nv nv-Anonymous">%4</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">mul</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="nv">%n</span><span class="p">,</span><span class="w"> </span><span class="nv nv-Anonymous">%3</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="k">ret</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="nv nv-Anonymous">%4</span><span class="w">                           </span><span class="c">; (8)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">}</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">define</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="vg">@main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">                   </span><span class="c">; (9)</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="nv nv-Anonymous">%1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">call</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="vg">@fac</span><span class="p">(</span><span class="kt">i64</span><span class="w"> </span><span class="m">6</span><span class="p">)</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="k">ret</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="nv nv-Anonymous">%1</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="p">}</span>
+</code></pre></div>
+<p>全局变量名以 <code>@</code> 开始，局部变量名以 <code>%</code> 开始，类型别名以 <code>%</code> 开始。函数定义 <code>define</code> 和各种指令（<code>icmp sle</code>、<code>sub</code>、<code>call</code>）都带类型。整体来说是和 C 差不多的弱类型，即有基本的类型检查，但是可以用 <code>bitcast</code> 指令强制转换。</p>
+<h2 id="_2">数据类型</h2>
+<p>数据类型整体上可以分为单元类型、简单类型、聚合类型和函数类型，具体语法如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>具体语法</th>
+<th>种类</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>void</code></td>
+<td>单元类型</td>
+<td>就是 OCaml 里的 <code>unit</code>，注意不是 Java 的 <code>null</code></td>
+</tr>
+<tr>
+<td><code>i1</code>，<code>i8</code>，<code>i64</code></td>
+<td>简单类型</td>
+<td>表示固定宽度的整数，LLVMlite 限制了只有这三种，LLVM 没有宽度限制</td>
+</tr>
+<tr>
+<td><code>T*</code></td>
+<td>简单类型</td>
+<td>指向类型 <code>T</code> 的指针类型</td>
+</tr>
+<tr>
+<td><code>F*</code></td>
+<td>简单类型</td>
+<td>指向函数 <code>F</code> 的指针类型</td>
+</tr>
+<tr>
+<td><code>S(S1, ... SN)</code></td>
+<td>函数类型</td>
+<td>参数为 <code>S1</code> 到 <code>SN</code>，返回值为 <code>S</code> 的函数</td>
+</tr>
+<tr>
+<td><code>{ T1, ..., TN }</code></td>
+<td>聚合类型</td>
+<td>类型 <code>T1</code> 到 <code>TN</code> 构成的元组</td>
+</tr>
+<tr>
+<td><code>[ N x T ]</code></td>
+<td>聚合类型</td>
+<td><code>N</code> 个 <code>T</code> 类型构成的数组</td>
+</tr>
+<tr>
+<td><code>%NAME</code></td>
+<td>*</td>
+<td>命名类型定义，也就是给某个类型取的别名</td>
+</tr>
+</tbody>
+</table>
+<p>其中命名类型定义的具体语法是 <code>%IDENT = type T</code>，<code>T</code> 中可以提到 <code>%IDENT</code>，但是不允许循环类型，也就是说如果提到 <code>%IDENT</code> 则必须出现在指针 <code>*</code> 下。</p>
+<p>下面是对应的 OCaml ADT 表示</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c">(* Local identifiers *)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">type</span> <span class="n">uid</span> <span class="o">=</span> <span class="kt">string</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c">(* Global identifiers *)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">type</span> <span class="n">gid</span> <span class="o">=</span> <span class="kt">string</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c">(* Named types *)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">type</span> <span class="n">tid</span> <span class="o">=</span> <span class="kt">string</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c">(* LLVM types *)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">type</span> <span class="n">ty</span> <span class="o">=</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="o">|</span> <span class="nc">Void</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="o">|</span> <span class="nc">I1</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="o">|</span> <span class="nc">I8</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="o">|</span> <span class="nc">I64</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="o">|</span> <span class="nc">Ptr</span> <span class="k">of</span> <span class="n">ty</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="o">|</span> <span class="nc">Struct</span> <span class="k">of</span> <span class="n">ty</span> <span class="kt">list</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="o">|</span> <span class="nc">Array</span> <span class="k">of</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">ty</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="o">|</span> <span class="nc">Fun</span> <span class="k">of</span> <span class="n">ty</span> <span class="kt">list</span> <span class="o">*</span> <span class="n">ty</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="o">|</span> <span class="nc">Namedt</span> <span class="k">of</span> <span class="n">tid</span>
+</code></pre></div>
+<p>有一个需要注意的点：LLVMlite 规定只有简单类型才可以出现在栈中或者是作为函数的参数，而聚合类型只能出现在全局和（运行时分配的）堆内存中，在栈上只能存一个指针。也就是说，简单类型可以 <code>alloca</code> 但是聚合类型不能 <code>alloca</code>（这一点和完整的 LLVM 不一样，完整的 LLVM 是可以 <code>alloca</code> 一个聚合类型的）。这个限制是简化目的，对于所有的聚合类型就要在运行时实现一个 <code>malloc</code> 之类的函数来处理分配了；结构体也不能像 C 语言那样整个拷贝传值调用，而是只能传一个指针。</p>
+<h2 id="_3">程序结构</h2>
+<p>LLVMlite 程序由（1）函数定义；（2）全局数据定义；（3）类型别名定义；（4）外部声明四部分构成。所有顶层定义都是互递归的。下面是这四个部分的 OCaml 数据结构。这里我们关注 <code>prog</code> 这个类型，是把顶层声明的绑定到名字上，有点像是可以创造出一个 ctxt 之类的东西用来做查询（实际上 LLVMlite 编译到 ISA 的时候也的确会用到）。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c">(* Function type: argument types and return type *)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">type</span> <span class="n">fty</span> <span class="o">=</span> <span class="n">ty</span> <span class="kt">list</span> <span class="o">*</span> <span class="n">ty</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c">(* Control Flow Graphs: entry and labeled blocks *)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">type</span> <span class="n">cfg</span> <span class="o">=</span> <span class="n">block</span> <span class="o">*</span> <span class="o">(</span><span class="n">lbl</span> <span class="o">*</span> <span class="n">block</span><span class="o">)</span> <span class="kt">list</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c">(* Function Declarations *)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">type</span> <span class="n">fdecl</span> <span class="o">=</span> <span class="o">{</span> <span class="n">f_ty</span> <span class="o">:</span> <span class="n">fty</span><span class="o">;</span> <span class="n">f_param</span> <span class="o">:</span> <span class="n">uid</span> <span class="kt">list</span><span class="o">;</span> <span class="n">f_cfg</span> <span class="o">:</span> <span class="n">cfg</span> <span class="o">}</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c">(* Global Data Initializers *)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">type</span> <span class="n">ginit</span> <span class="o">=</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="o">|</span> <span class="nc">GNull</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="o">|</span> <span class="nc">GGid</span> <span class="k">of</span> <span class="n">gid</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="o">|</span> <span class="nc">GInt</span> <span class="k">of</span> <span class="n">int64</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="o">|</span> <span class="nc">GString</span> <span class="k">of</span> <span class="kt">string</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="o">|</span> <span class="nc">GArray</span> <span class="k">of</span> <span class="o">(</span><span class="n">ty</span> <span class="o">*</span> <span class="n">ginit</span><span class="o">)</span> <span class="kt">list</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="o">|</span> <span class="nc">GStruct</span> <span class="k">of</span> <span class="o">(</span><span class="n">ty</span> <span class="o">*</span> <span class="n">ginit</span><span class="o">)</span> <span class="kt">list</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="o">|</span> <span class="nc">GBitcast</span> <span class="k">of</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">ginit</span> <span class="o">*</span> <span class="n">ty</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c">(* Global Declarations *)</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="k">type</span> <span class="n">gdecl</span> <span class="o">=</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">ginit</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c">(* LLVMlite Programs *)</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="k">type</span> <span class="n">prog</span> <span class="o">=</span> <span class="o">{</span> <span class="n">tdecls</span> <span class="o">:</span> <span class="o">(</span><span class="n">tid</span> <span class="o">*</span> <span class="n">ty</span><span class="o">)</span> <span class="kt">list</span><span class="o">;</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>              <span class="n">gdecls</span> <span class="o">:</span> <span class="o">(</span><span class="n">gid</span> <span class="o">*</span> <span class="n">gdecl</span><span class="o">)</span> <span class="kt">list</span><span class="o">;</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>              <span class="n">fdecls</span> <span class="o">:</span> <span class="o">(</span><span class="n">gid</span> <span class="o">*</span> <span class="n">fdecl</span><span class="o">)</span> <span class="kt">list</span><span class="o">;</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>              <span class="n">edecls</span> <span class="o">:</span> <span class="o">(</span><span class="n">gid</span> <span class="o">*</span> <span class="n">ty</span><span class="o">)</span> <span class="kt">list</span> <span class="o">}</span>
+</code></pre></div>
+<p>下面我们依次关注 <code>prog</code> 的各个字段。</p>
+<h2 id="_4">类型声明</h2>
+<p><code>{ tdelcs : (tid * ty) list; ... }</code> 是把类型绑定到一个 tid 上。具体语法如下所示：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">%foo</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="kt">i64</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">%bar</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="k">x</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="p">]</span>
+</code></pre></div>
+<p>假设上层语言有一个 <code>typealis Foo = Bar</code> 之类的代码，我们可以编译成一个 <code>[ "Foo", cmp_ty (Namedt "Bar") ]</code> 把右边编译好的类型绑定到 <code>"Foo"</code> 这个名字上。</p>
+<h2 id="_5">外部声明</h2>
+<p><code>{ edecls: (gid * ty) list; ... }</code> 在 LLVMlite 中的具体语法有下面的例子：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">declare</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="vg">@puts</span><span class="p">(</span><span class="kt">i8</span><span class="p">*)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">declare</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="vg">@some_extern_func</span><span class="p">(</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="m">5</span><span class="w"> </span><span class="k">x</span><span class="w"> </span><span class="kt">i64</span><span class="p">],</span><span class="w"> </span><span class="kt">i8</span><span class="p">*)</span>
+</code></pre></div>
+<p>可以用来编译上层语言的外部声明之类。也可以用来声明上层语言的内建函数，实现可以放到运行时里面用其他语言来生成，只要链接时对上签名 ABI 就行。</p>
+<h2 id="_6">全局声明</h2>
+<p><code>{ gdecls: (gid * gdecl) list; ... }</code>，然后回顾一下 <code>gdecl</code> 的类型是 <code>type gdecl = ty * ginit</code>，也就是类型及其初始值。<code>ty</code> 和 <code>ginit</code> 需要手动对上，后者有下面的几种可能：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c">(* Global Data Initializers *)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">type</span> <span class="n">ginit</span> <span class="o">=</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="o">|</span> <span class="nc">GNull</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="o">|</span> <span class="nc">GInt</span> <span class="k">of</span> <span class="n">int64</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="o">|</span> <span class="nc">GString</span> <span class="k">of</span> <span class="kt">string</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="o">|</span> <span class="nc">GGid</span> <span class="k">of</span> <span class="n">gid</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="o">|</span> <span class="nc">GArray</span> <span class="k">of</span> <span class="o">(</span><span class="n">ty</span> <span class="o">*</span> <span class="n">ginit</span><span class="o">)</span> <span class="kt">list</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="o">|</span> <span class="nc">GStruct</span> <span class="k">of</span> <span class="o">(</span><span class="n">ty</span> <span class="o">*</span> <span class="n">ginit</span><span class="o">)</span> <span class="kt">list</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="o">|</span> <span class="nc">GBitcast</span> <span class="k">of</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">ginit</span> <span class="o">*</span> <span class="n">ty</span>
+</code></pre></div>
+<p>全局声明的具体语法是：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="vg">@foo</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">global</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="m">42</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="vg">@bar</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">global</span><span class="w"> </span><span class="kt">i64</span><span class="p">*</span><span class="w"> </span><span class="vg">@foo</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="vg">@baz</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">global</span><span class="w"> </span><span class="kt">i64</span><span class="p">**</span><span class="w"> </span><span class="vg">@bar</span>
+</code></pre></div>
+<p>下面的表列出了各种 <code>ginit</code> 的具体语法：</p>
+<table>
+<thead>
+<tr>
+<th>具体语法</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>null</code></td>
+<td><code>T*</code></td>
+<td>空指针常量</td>
+</tr>
+<tr>
+<td><code>[0-9]+</code></td>
+<td><code>i64</code></td>
+<td>64 位有符号整数字面量</td>
+</tr>
+<tr>
+<td><code>c"[A-z]*\00"</code></td>
+<td><code>[N x i8]</code></td>
+<td>字符串字面量，长度 <code>N</code> 包括结尾的空字符</td>
+</tr>
+<tr>
+<td><code>@IDENT</code></td>
+<td><code>T*</code></td>
+<td>全局标识符，注意始终是指针</td>
+</tr>
+<tr>
+<td><code>[ T G1, ..., T GN ]</code></td>
+<td><code>[ N x T ]</code></td>
+<td>数组字面量</td>
+</tr>
+<tr>
+<td><code>{ T1 G1, ..., TN GN }</code></td>
+<td><code>{ T1,...,TN }</code></td>
+<td>结构体字面量</td>
+</tr>
+<tr>
+<td><code>bitcast (T1* G1 to T2*)</code></td>
+<td><code>T2*</code></td>
+<td>重新解释比特的类型</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_7">函数声明</h2>
+<p><code>{ fdecls: (gid * fdecl) list; ... }</code>，其中 <code>type fdecl = { f_ty : fty; f_param : uid list; f_cfg : cfg }</code>。函数声明的具体语法如下所示：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">define</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="vg">@fac</span><span class="p">(</span><span class="kt">i64</span><span class="w"> </span><span class="nv">%n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nv nv-Anonymous">%1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">icmp</span><span class="w"> </span><span class="k">sle</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="nv">%n</span><span class="p">,</span><span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="k">br</span><span class="w"> </span><span class="kt">i1</span><span class="w"> </span><span class="nv nv-Anonymous">%1</span><span class="p">,</span><span class="w"> </span><span class="kt">label</span><span class="w"> </span><span class="nv">%ret</span><span class="p">,</span><span class="w"> </span><span class="kt">label</span><span class="w"> </span><span class="nv">%rec</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nl">ret:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="k">ret</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nl">rec:</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="nv nv-Anonymous">%2</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">sub</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="nv">%n</span><span class="p">,</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nv nv-Anonymous">%3</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">call</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="vg">@fac</span><span class="p">(</span><span class="kt">i64</span><span class="w"> </span><span class="nv nv-Anonymous">%2</span><span class="p">)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="nv nv-Anonymous">%4</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="k">mul</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="nv">%n</span><span class="p">,</span><span class="w"> </span><span class="nv nv-Anonymous">%3</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="k">ret</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="nv nv-Anonymous">%4</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">}</span>
+</code></pre></div>
+<p>函数内部是由基本块组成的。每个基本块（除了函数的第一个基本块）开头都有一个标签，内部都是普通指令，没有跳转指令，最后是一条跳转指令。</p>
+<p>在 LLVMlite 中要求第一个基本块没有标签，在 LLVM 中第一个基本块的标签是可选的，如果没有写的话会默认分配一个标签。</p>
+<p>指令的操作数如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>具体语法</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>null</code></td>
+<td><code>T*</code></td>
+<td>空指针常量</td>
+</tr>
+<tr>
+<td><code>[0-9]+</code></td>
+<td><code>i64</code></td>
+<td>64 位整数字面量</td>
+</tr>
+<tr>
+<td><code>@IDENT</code></td>
+<td><code>T*</code></td>
+<td>全局标识符，注意始终是指针</td>
+</tr>
+<tr>
+<td><code>%IDENT</code></td>
+<td><code>S</code></td>
+<td>局部标识符，只能是简单类型的值</td>
+</tr>
+</tbody>
+</table>
+<p>对应的 OCaml 语法是：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c">(* Syntactic Values *)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">type</span> <span class="n">operand</span> <span class="o">=</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="o">|</span> <span class="nc">Null</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="o">|</span> <span class="nc">Const</span> <span class="k">of</span> <span class="n">int64</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="o">|</span> <span class="nc">Gid</span> <span class="k">of</span> <span class="n">gid</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="o">|</span> <span class="nc">Id</span> <span class="k">of</span> <span class="n">uid</span>
+</code></pre></div>
+<p>基本指令包括：</p>
+<table>
+<thead>
+<tr>
+<th>具体语法</th>
+<th>操作数 → 结果类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%L = BOP i64 OP1, OP2</code></td>
+<td><code>i64 x i64 -&gt; i64</code></td>
+</tr>
+<tr>
+<td><code>%L = alloca S</code></td>
+<td><code>- -&gt; S*</code></td>
+</tr>
+<tr>
+<td><code>%L = load S* OP</code></td>
+<td><code>S* -&gt; S</code></td>
+</tr>
+<tr>
+<td><code>store S OP1, S* OP2</code></td>
+<td><code>S x S* -&gt; void</code></td>
+</tr>
+<tr>
+<td><code>%L = icmp CND S OP1, OP2</code></td>
+<td><code>S x S -&gt; i1</code></td>
+</tr>
+<tr>
+<td><code>%L = call S1 OP1(S2 OP2, ..., SN OPN)</code></td>
+<td><code>S1(S2, ..., SN)* x S2 x ... x SN -&gt; S1</code></td>
+</tr>
+<tr>
+<td><code>call void OP1(S2 OP2, ... ,SN OPN)</code></td>
+<td><code>void(S2, ..., SN)* x S2 x ... x SN -&gt; void</code></td>
+</tr>
+<tr>
+<td><code>%L = getelementptr T1, T1* OP1, i32 OP2, ..., i32 OPN</code></td>
+<td><code>T1* x i64 x ... x i64 -&gt; GEPTY(T1, OP1, ..., OPN)*</code></td>
+</tr>
+<tr>
+<td><code>%L = bitcast T1* OP to T2*</code></td>
+<td><code>T1* -&gt; T2*</code></td>
+</tr>
+</tbody>
+</table>
+<p>基本指令的 OCaml 表示如下所示：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c">(* Instructions *)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">type</span> <span class="n">insn</span> <span class="o">=</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="o">|</span> <span class="nc">Binop</span> <span class="k">of</span> <span class="n">bop</span> <span class="o">*</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">operand</span> <span class="o">*</span> <span class="n">operand</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="o">|</span> <span class="nc">Alloca</span> <span class="k">of</span> <span class="n">ty</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="o">|</span> <span class="nc">Load</span> <span class="k">of</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">operand</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="o">|</span> <span class="nc">Store</span> <span class="k">of</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">operand</span> <span class="o">*</span> <span class="n">operand</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="o">|</span> <span class="nc">Icmp</span> <span class="k">of</span> <span class="n">cnd</span> <span class="o">*</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">operand</span> <span class="o">*</span> <span class="n">operand</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="o">|</span> <span class="nc">Call</span> <span class="k">of</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">operand</span> <span class="o">*</span> <span class="o">(</span><span class="n">ty</span> <span class="o">*</span> <span class="n">operand</span><span class="o">)</span> <span class="kt">list</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="o">|</span> <span class="nc">Bitcast</span> <span class="k">of</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">operand</span> <span class="o">*</span> <span class="n">ty</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="o">|</span> <span class="nc">Gep</span> <span class="k">of</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">operand</span> <span class="o">*</span> <span class="n">operand</span> <span class="kt">list</span>
+</code></pre></div>
+<p>（<code>Bitcase</code> 是左边的 <code>ty</code> cast 成右边的 <code>ty</code>）</p>
+<p>终结指令包容：</p>
+<table>
+<thead>
+<tr>
+<th>具体语法</th>
+<th>操作数 → 结果类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ret void</code></td>
+<td><code>- -&gt; -</code></td>
+</tr>
+<tr>
+<td><code>ret S OP</code></td>
+<td><code>S -&gt; -</code></td>
+</tr>
+<tr>
+<td><code>br label %LAB</code></td>
+<td><code>- -&gt; -</code></td>
+</tr>
+<tr>
+<td><code>br i1 OP, label %LAB1, label %LAB2</code></td>
+<td><code>i1 -&gt; -</code></td>
+</tr>
+</tbody>
+</table>
+<p>终结指令的 OCaml 表示如下所示：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">type</span> <span class="n">terminator</span> <span class="o">=</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="o">|</span> <span class="nc">Ret</span> <span class="k">of</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">operand</span> <span class="n">option</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="o">|</span> <span class="nc">Br</span> <span class="k">of</span> <span class="n">lbl</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="o">|</span> <span class="nc">Cbr</span> <span class="k">of</span> <span class="n">operand</span> <span class="o">*</span> <span class="n">lbl</span> <span class="o">*</span> <span class="n">lbl</span>
+</code></pre></div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.indexes"], "search": "../../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+        <script src="../../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
