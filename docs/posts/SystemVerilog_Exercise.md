@@ -1,7 +1,7 @@
 ---
 date: 2025-06-01
 categories:
-  - hardware
+  - HW
 ---
 
 # SystemVerilog 练习
