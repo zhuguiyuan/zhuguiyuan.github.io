@@ -641,6 +641,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ssa" class="md-nav__link">
+    <span class="md-ellipsis">
+      关于 SSA
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1055,7 +1064,7 @@
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="o">|</span> <span class="nc">Bitcast</span> <span class="k">of</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">operand</span> <span class="o">*</span> <span class="n">ty</span>
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="o">|</span> <span class="nc">Gep</span> <span class="k">of</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">operand</span> <span class="o">*</span> <span class="n">operand</span> <span class="kt">list</span>
 </code></pre></div>
-<p>（<code>Bitcase</code> 是左边的 <code>ty</code> cast 成右边的 <code>ty</code>）</p>
+<p>（<code>Load</code> 的 <code>ty</code> 指的是 <code>S*</code>；<code>Store</code> 的 <code>ty</code> 是 <code>S</code>，第一个 <code>operand</code> 存到第二个 <code>operand</code> 里；<code>Bitcase</code> 是左边的 <code>ty</code> cast 成右边的 <code>ty</code>）</p>
 <p>终结指令包容：</p>
 <table>
 <thead>
@@ -1089,6 +1098,8 @@
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="o">|</span> <span class="nc">Br</span> <span class="k">of</span> <span class="n">lbl</span>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="o">|</span> <span class="nc">Cbr</span> <span class="k">of</span> <span class="n">operand</span> <span class="o">*</span> <span class="n">lbl</span> <span class="o">*</span> <span class="n">lbl</span>
 </code></pre></div>
+<h2 id="ssa">关于 SSA</h2>
+<p>目前 LLVMlite 里面还没有引入 <code>phi</code> 语句，因此要处理上层语言 mutable 的情况，只能用 <code>alloca</code> 和 <code>store</code> 开洞。但是这个问题不大，因为生成的 LLVMlite 代码和 LLVM 是兼容的，当作 LLVM 走一下 <code>opt</code> 就优化成带有 phi 节点了，然后就可以做 SSA 的优化和生成。</p>
 
 
 
