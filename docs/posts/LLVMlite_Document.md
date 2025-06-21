@@ -253,7 +253,7 @@ type insn =
 | Gep of ty * operand * operand list
 ```
 
-（`Bitcase` 是左边的 `ty` cast 成右边的 `ty`）
+（`Load` 的 `ty` 指的是 `S*`；`Store` 的 `ty` 是 `S`，第一个 `operand` 存到第二个 `operand` 里；`Bitcase` 是左边的 `ty` cast 成右边的 `ty`）
 
 终结指令包容：
 
@@ -272,3 +272,7 @@ type terminator =
 | Br of lbl
 | Cbr of operand * lbl * lbl
 ```
+
+## 关于 SSA
+
+目前 LLVMlite 里面还没有引入 `phi` 语句，因此要处理上层语言 mutable 的情况，只能用 `alloca` 和 `store` 开洞。但是这个问题不大，因为生成的 LLVMlite 代码和 LLVM 是兼容的，当作 LLVM 走一下 `opt` 就优化成带有 phi 节点了，然后就可以做 SSA 的优化和生成。
