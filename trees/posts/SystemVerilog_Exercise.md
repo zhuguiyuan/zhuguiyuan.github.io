@@ -1,14 +1,10 @@
 ---
+title: SystemVerilog 练习
 date: 2025-06-01
-categories:
-  - HW
+taxon: HW
 ---
 
-# SystemVerilog 练习
-
 前两天看完了《使用 SystemVerilog 进行 RTL 建模》这本书，算是第一次系统地学了一遍。最近也回顾了刚上研究生时候写的 EE218-VLSI 课程项目，觉得可以用 SystemVerilog 重写一遍作为练习。于是在这里记录下项目规约和实现。
-
-<!-- more -->
 
 ## 项目规约
 

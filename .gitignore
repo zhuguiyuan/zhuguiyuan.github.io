@@ -1,5 +1,8 @@
-site/
-venv/
-.venv/
-draft/
+*
+!*/
+!.gitignore
 
+!/.github/**
+!/trees/**
+!/assets/**
+!/Kodama.toml
