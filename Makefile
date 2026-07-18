@@ -1,8 +1,8 @@
 show:
-	mkdocs serve
+	uv run mkdocs serve
 
 push:
-	mkdocs gh-deploy --force
+	uv run mkdocs gh-deploy --force
 
 clean:
 	rm -rf site
