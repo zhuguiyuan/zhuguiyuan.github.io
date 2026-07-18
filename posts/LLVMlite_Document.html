@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width"><title>在现实和历史中漂流</title><link rel="icon" href="/assets/favicon.ico" /><template id="theme-option-template"><input type="radio" name="theme" /><label></label></template><script src="/main.js"></script><!-- Also see: https://katex.org/docs/autorender -->
+<meta name="viewport" content="width=device-width"><title>LLVMlite 文档</title><link rel="icon" href="/assets/favicon.ico" /><template id="theme-option-template"><input type="radio" name="theme" /><label></label></template><script src="/main.js"></script><!-- Also see: https://katex.org/docs/autorender -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css" integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.js" integrity="sha384-Tt7wBxLKwSzFVRET4O4U9H6v8MNaQ/CjN2FMP4xFm0ErrFu6aNqoonRVW5W40iGI" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"></script>
@@ -33,10 +33,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap" rel="stylesheet">
-</head><body><div id="grid-wrapper" style="grid-template-areas: 'article toc';" data-base-url="/"><nav id="toc" class="sticky-nav mobile-sticky-nav"><div id="theme-options"></div><div class="block"><details open=""><summary><h1>Table of Contents</h1></summary><ul class="block"><li class="item-summary"><a class="bullet" href="/posts/LLVMlite_Document.html" title="LLVMlite 文档 [posts/LLVMlite_Document]">■</a><span class="link local" onclick="window.location.href='#posts-LLVMlite_Document'"><span class="taxon">PL. </span>LLVMLite <span lang="zh">文档</span></span></li><li class="item-summary"><a class="bullet" href="/posts/SystemVerilog_Exercise.html" title="SystemVerilog 练习 [posts/SystemVerilog_Exercise]">■</a><span class="link local" onclick="window.location.href='#posts-SystemVerilog_Exercise'"><span class="taxon">HW. </span>SystemVerilog <span lang="zh">练习</span></span></li></ul></details></div></nav>
+</head><body><header class="header"><nav class="nav"><div class="logo"><span class="cursor-pointer" onclick="window.location.href='/index.html'" title="在现实和历史中漂流">« <span lang="zh">在现实和历史中漂流</span></span></div></nav></header><div id="grid-wrapper" style="grid-template-areas: 'article toc';" data-base-url="/"><nav id="toc" class="sticky-nav mobile-sticky-nav"><div id="theme-options"></div></nav>
 
-<article><section class="block" data-taxon=""><details open><summary id="index"><header><h1><span class="taxon"></span><span lang="zh">在现实和历史中漂流</span> <a class="slug" href="/index.html">[index]</a></h1><div class="metadata"><ul></ul></div></header></summary><h2><span lang="zh">所有文章</span></h2>
-<section class="block hide-metadata" data-taxon="PL"><details ><summary id="posts-LLVMlite_Document"><header><h1><span class="taxon">PL. </span>LLVMLite <span lang="zh">文档</span> <a class="slug" href="/posts/LLVMlite_Document.html">[posts/LLVMlite_Document]</a></h1><div class="metadata"><ul><li class="meta-item">2025-06-13</li></ul></div></header></summary><p>LLVMlite <span lang="zh">是</span> Upenn CIS314（<span lang="zh">也是上科大</span> CS131）Compiler <span lang="zh">课程中定义的</span> LLVM IR <span lang="zh">的简化子集。它保留了</span> LLVM <span lang="zh">的核心要素，挺适合用作初学者写编译器的目标语言。这篇文章是</span> LLVMlite <span lang="zh">规范的简要记录。</span></p>
+<article><section class="block" data-taxon="PL"><details open><summary id="posts-LLVMlite_Document"><header><h1><span class="taxon">PL. </span>LLVMlite <span lang="zh">文档</span> <a class="slug" href="/posts/LLVMlite_Document.html">[posts/LLVMlite_Document]</a></h1><div class="metadata"><ul><li class="meta-item">2025-06-13</li></ul></div></header></summary><p>LLVMlite <span lang="zh">是</span> Upenn CIS314（<span lang="zh">也是上科大</span> CS131）Compiler <span lang="zh">课程中定义的</span> LLVM IR <span lang="zh">的简化子集。它保留了</span> LLVM <span lang="zh">的核心要素，挺适合用作初学者写编译器的目标语言。这篇文章是</span> LLVMlite <span lang="zh">规范的简要记录。</span></p>
 <h2><span lang="zh">第一感觉</span></h2>
 <p><span lang="zh">下面是</span> LLVMlite <span lang="zh">的一个例子，可以看到一些基本元素和</span> LLVM <span lang="zh">是一致的。</span></p>
 <p><span lang="zh">这个例子也能通过</span> <code>llc</code> <span lang="zh">编译为</span> ISA <span lang="zh">对应的汇编或</span> <code>clang</code> <span lang="zh">直接编译为可以运行的</span> ELF。</p>
@@ -239,78 +238,4 @@ type insn =
 </code></pre>
 <h2><span lang="zh">关于</span> SSA</h2>
 <p><span lang="zh">目前</span> LLVMlite <span lang="zh">里面还没有引入</span> <code>phi</code> <span lang="zh">语句，因此要处理上层语言</span> mutable <span lang="zh">的情况，只能用</span> <code>alloca</code> <span lang="zh">和</span> <code>store</code> <span lang="zh">开洞。但是这个问题不大，因为生成的</span> LLVMlite <span lang="zh">代码和</span> LLVM <span lang="zh">是兼容的，当作</span> LLVM <span lang="zh">走一下</span> <code>opt</code> <span lang="zh">就优化成带有</span> phi <span lang="zh">节点了，然后就可以做</span> SSA <span lang="zh">的优化和生成。</span></p>
-</details></section><section class="block hide-metadata" data-taxon="HW"><details ><summary id="posts-SystemVerilog_Exercise"><header><h1><span class="taxon">HW. </span>SystemVerilog <span lang="zh">练习</span> <a class="slug" href="/posts/SystemVerilog_Exercise.html">[posts/SystemVerilog_Exercise]</a></h1><div class="metadata"><ul><li class="meta-item">2025-06-01</li></ul></div></header></summary><p><span lang="zh">前两天看完了《使用</span> SystemVerilog <span lang="zh">进行</span> RTL <span lang="zh">建模》这本书，算是第一次系统地学了一遍。最近也回顾了刚上研究生时候写的</span> EE218-VLSI <span lang="zh">课程项目，觉得可以用</span> SystemVerilog <span lang="zh">重写一遍作为练习。于是在这里记录下项目规约和实现。</span></p>
-<h2><span lang="zh">项目规约</span></h2>
-<p><span lang="zh">实现一个</span> MLP <span lang="zh">单元，这个单元有</span> 8 <span lang="zh">层，每层</span> 16 * 16 <span lang="zh">的权重（</span>$W_0 ... W_7$），<span lang="zh">接收一个</span> 16 * 16 <span lang="zh">的输入</span> $I$，<span lang="zh">计算</span> $W_7 \times ... \times W_0 \times I$。</p>
-<p><span lang="zh">端口定义为：</span></p>
-<ul>
-<li><code>start_ready</code>，1 <span lang="zh">位输出，表示模块准备好，可以加载输入并开始一轮计算任务</span></li>
-<li><code>start_valid</code>，1 <span lang="zh">位输入，表示启动计算任务，在之后（从下一个周期开始）</span>16 * 16 <span lang="zh">个周期顺序加载输入矩阵</span> $I$，<span lang="zh">然后开始计算</span></li>
-<li><code>init_ready</code>，1 <span lang="zh">位输出，表示模块准备好，可以加载权重</span></li>
-<li><code>init_valid</code>，1 <span lang="zh">位输入，表示启动权重加载，在之后（从下一个周期开始）</span>16 * 16 * 8 <span lang="zh">个周期顺序加载权重</span> $W_0 ... W_7$</li>
-<li><code>load_payload</code>，16 <span lang="zh">位输入，用于加载输入和权重矩阵</span></li>
-<li><code>result_valid</code>，1 <span lang="zh">位输出，表示当前周期输出的数据有效</span></li>
-<li><code>result_payload</code>，16 <span lang="zh">位输出，表示</span> MLP <span lang="zh">输出的计算结果</span></li>
-</ul>
-<p><span lang="zh">其他要求为：</span></p>
-<ul>
-<li><span lang="zh">所有的输入和输出都是</span> 16 <span lang="zh">位定点数（</span>7 <span lang="zh">位整数，</span>9 <span lang="zh">位小数）。中间计算步骤需要保证全精度，结果先对小数部分使用就近四舍五入，然后对整数部分使用饱和操作处理溢出。</span></li>
-<li><span lang="zh">输入和输出带宽不超过</span> 32 bits <span lang="zh">每</span> cycle。</li>
-<li><span lang="zh">提供了字宽为</span> 16 <span lang="zh">和</span> 32 <span lang="zh">的，深度为</span> 128、256、512 <span lang="zh">和</span> 1024 <span lang="zh">的，单端口和伪双端口的</span> SRAM <span lang="zh">硬核，及相应的</span> RTL <span lang="zh">行为模型。</span></li>
-</ul>
-<p>RTL <span lang="zh">行为模型如下两个例子所示，其他</span> RAM <span lang="zh">实例的名称和位宽自行类比：</span></p>
-<pre><code class="language-verilog">// 深度 1024 字宽 32 伪双端口
-module sramTpw1024d32 (
-    input  wire [31:0] D,
-    input  wire [ 9:0] ADRw,
-    input  wire        MEw,
-    output wire [31:0] Q,
-    input  wire [ 9:0] ADRr,
-    input  wire        MEr,
-    input  wire        clk
-);
-  reg [31:0] tmp_Q;
-  reg [31:0] sramTp[0:1023];
-
-  always @(posedge clk) begin
-    if (MEw) begin
-      sramTp[ADRw] &lt;= D;
-    end
-    if (MEr) begin
-      tmp_Q &lt;= sramTp[ADRr];
-    end
-  end
-
-  assign Q = tmp_Q;
-
-endmodule
-
-// 深度 128 字宽 32 单端口
-module sramSpw128d32 (
-    output wire [31:0] Q,
-    input  wire [ 6:0] ADR,
-    input  wire [31:0] D,
-    input  wire        WE,
-    input  wire        ME,
-    input  wire        clk
-);
-  reg [31:0] tmp_Q;
-  reg [31:0] sramSp[0:127];
-
-  always @(posedge clk) begin
-    if (ME) begin
-      tmp_Q &lt;= sramSp[ADR];
-    end
-    if (ME &amp;&amp; WE) begin
-      sramSp[ADR] &lt;= D;
-    end
-  end
-
-  assign Q = tmp_Q;
-
-endmodule
-</code></pre>
-<p><span lang="zh">项目提供了一些测试数据，由于以练习</span> SystemVerilog <span lang="zh">为目的，只实现</span> RTL <span lang="zh">模型即可，不用做后端。使用</span> Icarus Verilog <span lang="zh">和</span> ADM/Xilinx Vivado <span lang="zh">分别作为开源和闭源的仿真工具。使用</span> <span class="link external"><a href="https://github.com/zhuguiyuan/Yosys-STA" title="Yosys-STA [https://github.com/zhuguiyuan/Yosys-STA]">Yosys-STA</a></span> <span lang="zh">项目评估时序。</span></p>
-<h2><span lang="zh">项目实现</span></h2>
-<p><span lang="zh">代码见仓库</span> <span class="link external"><a href="https://github.com/zhuguiyuan/SystemVerilog-Exercise" title="SystemVerilog-Exercise [https://github.com/zhuguiyuan/SystemVerilog-Exercise]">SystemVerilog-Exercise</a></span>。</p>
-</details></section></details></section><footer></footer></article></div></body></html>
+</details></section><footer></footer></article></div></body></html>
